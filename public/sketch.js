@@ -3,7 +3,7 @@ var socket; var data;
 function setup(){
     var canvas = createCanvas(windowWidth, windowHeight);
     background(200);
-    socket = io.connect('https://shrouded-headland-3306.herokuapp.com/');
+    socket = io.connect('https://gradation.herokuapp.com/');
     // We make a named event called 'mouse' and write an
     // anonymous callback function
     socket.on('mouse', function(data) {
