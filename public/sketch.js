@@ -2,7 +2,7 @@ var socket; var data; var pulse; var canvas;
 
 function setup(){
     canvas = createCanvas(windowWidth, windowHeight);
-    background(200);
+    background(240);
     socket = io.connect('https://gradation.herokuapp.com/');
     // We make a named event called 'mouse' and write an
     // anonymous callback function
@@ -12,14 +12,21 @@ function setup(){
         console.log(data);
         fill(0,0,255);
         noStroke();
-        ellipse(data.x,data.y,80,80);
+        ellipse(data.x,data.y,40,40);
     });
+    /* testing communication with server
     socket.on('tweet', function(tweet) {
         console.log('tweet from', tweet.username);
         console.log('contents:', tweet.text);
     });
+    */
     socket.on('audio', function(osc) {
-        console.log('audio emitted!');
+        //console.log('audio coming in!');
+        console.log('frequency in is ' + osc.freq);
+        freqStream = map(osc.freq, 0, 2000, 0, 255);
+        console.log('mapped frequency is ' + freqStream);
+        pulse.freq(osc.freq);
+        //canvas.background = background(freqStream); 
     });
     
     pulse = new p5.Pulse();
@@ -30,16 +37,11 @@ function setup(){
 }
 
 function draw() {
-    var f = map(mouseX, 0,width, 10,2000);
+    var f = map(mouseX, 0, width, 10, 2000);
     pulse.freq(f);
     //console.log(pulse.getFreq());
     
-    osc = {
-        amp: pulse.getAmp(),
-        freq: pulse.getFreq()
-    };
-    console.log(osc.freq);
-    socket.emit('audio', osc);
+
 }
 
 function windowResized() {
@@ -57,4 +59,10 @@ function mouseDragged() {
     console.log(data.x);
     // Send that object to the socket
     socket.emit('mouse', data);
+        osc = {
+        amp: pulse.getAmp(),
+        freq: pulse.getFreq()
+    };
+    console.log('frequency out is ' + osc.freq);
+    socket.emit('audio', osc);
 }
