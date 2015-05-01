@@ -1,7 +1,7 @@
-var socket; var data;
+var socket; var data; var pulse; var canvas;
 
 function setup(){
-    var canvas = createCanvas(windowWidth, windowHeight);
+    canvas = createCanvas(windowWidth, windowHeight);
     background(200);
     socket = io.connect('https://gradation.herokuapp.com/');
     // We make a named event called 'mouse' and write an
@@ -18,15 +18,34 @@ function setup(){
         console.log('tweet from', tweet.username);
         console.log('contents:', tweet.text);
     });
+    socket.on('audio', function(osc) {
+        console.log('audio emitted!');
+    });
+    
+    pulse = new p5.Pulse();
+    pulse.amp(0.5);
+    pulse.freq(220);
+    pulse.start();
+
 }
 
 function draw() {
-    //socket.emit('mouse', data);
+    var f = map(mouseX, 0,width, 10,2000);
+    pulse.freq(f);
+    //console.log(pulse.getFreq());
+    
+    osc = {
+        amp: pulse.getAmp(),
+        freq: pulse.getFreq()
+    };
+    console.log(osc.freq);
+    socket.emit('audio', osc);
 }
 
 function windowResized() {
     canvas.width = windowWidth;
-    console.log(canvas.width);
+    canvas.height = windowHeight;
+    //console.log(canvas.width);
 }
 
 function mouseDragged() {

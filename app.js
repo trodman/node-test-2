@@ -22,13 +22,20 @@ io.on('connection', function (socket) {
     });
     socket.on('mouse',
         function(data) {
-                // Data comes in as whatever was sent, including objects
-            console.log("Received: 'mouse' " + data.x + " " + data.y);      
-                // Send it to all other clients
+            // Data comes in as whatever was sent, including objects
+            console.log("Received: 'mouse' " + data.x + " " + data.y);   
+        
+            // Send it to all other clients
             //broadcast sends to other clients, but not to user [unidirectional]
             //socket.broadcast.emit('mouse', data);
             //emit sends to user and also other clients [bidirectional]
             io.sockets.emit('mouse', data);
+        }
+    );
+    socket.on('audio',
+        function(osc) {
+            console.log('audio ping');
+            io.sockets.emit('audio', osc);
         }
     );
 });

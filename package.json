@@ -4,6 +4,7 @@
   "description": "testing node.js",
   "dependencies": {
     "express": "^4.12.3",
+    "p5": "^0.4.4",
     "socket.io": "^1.3.5"
   }
 }
